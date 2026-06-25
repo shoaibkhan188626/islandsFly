@@ -1,0 +1,989 @@
+/* ============================================
+   ISLANDSFLY — DESIGN SYSTEM
+   Shared typography, buttons, cards, inputs,
+   icons, and layout tokens.
+   ============================================ */
+
+/* ---- CSS Variables ---- */
+:root {
+    /* Brand colours */
+    /* Brand colours — IslandsFly palette */
+    --color-primary: #8B6844;
+    --color-primary-dark: #6B4E30;
+    --color-primary-light: #B89268;
+
+    --color-secondary: #D8CCBA;
+    /* sandy beige */
+    --color-secondary-dark: #BFB09C;
+    --color-secondary-light: #EDE8DF;
+
+    --color-tertiary: #C9A258;
+    /* golden tan */
+    --color-tertiary-dark: #A07840;
+    --color-tertiary-light: #F0E4C8;
+
+    /* Neutrals */
+    --bg-light: #FAF8F4;
+    --bg-warm: #F2EDE4;
+    --text-dark: #3D2510;
+    --text-body: #5C3D1E;
+    --text-muted: #8C7060;
+    --border-color: #DDD0BC;
+
+    /* Heights */
+    --height-btn-sm: 34px;
+    --height-btn-md: 42px;
+    --height-btn-lg: 50px;
+    --height-input: 42px;
+    --height-card-header: 52px;
+    --height-navbar: 64px;
+    --height-navbar-mobile: 56px;
+
+    /* Border radius */
+    --radius-btn: 8px;
+    --radius-card: 12px;
+    --radius-badge: 20px;
+    --radius-input: 8px;
+
+    /* Shadows */
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.14);
+}
+
+/* ============================================
+   TYPOGRAPHY — Desktop
+   ============================================ */
+
+h1,
+.h1 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h2,
+.h2 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h3,
+.h3 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h4,
+.h4 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h5,
+.h5 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h6,
+.h6 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+body,
+p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+label,
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+small,
+.small,
+.text-muted.small,
+.hint {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    height: var(--height-btn-md);
+    padding: 0 20px;
+    border-radius: var(--radius-btn);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Small variant */
+.btn-sm {
+    height: var(--height-btn-sm);
+    padding: 0 14px;
+    font-size: 13px;
+}
+
+/* Large variant */
+.btn-lg {
+    height: var(--height-btn-lg);
+    padding: 0 28px;
+    font-size: 16px;
+}
+
+/* Icons inside buttons */
+.btn i,
+.btn .bi {
+    font-size: 16px;
+}
+
+.btn-sm i,
+.btn-sm .bi {
+    font-size: 14px;
+}
+
+.btn-lg i,
+.btn-lg .bi {
+    font-size: 18px;
+}
+
+/* Danger button */
+.btn-danger {
+    background-color: #DC2626;
+    border-color: #DC2626;
+}
+
+.btn-danger:hover {
+    background-color: #B91C1C;
+    border-color: #B91C1C;
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+
+.form-control,
+.form-select {
+    height: var(--height-input);
+    font-size: 16px;
+    font-weight: 400;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-input);
+    padding: 0 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-secondary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44, 181, 176, 0.15);
+}
+
+.form-control::placeholder {
+    font-size: 14px;
+    font-weight: 400;
+    color: #9CA3AF;
+}
+
+textarea.form-control {
+    height: auto;
+    padding: 10px 14px;
+    min-height: var(--height-input);
+}
+
+/* ============================================
+   NAV LINKS
+   ============================================ */
+
+.navbar {
+    position: relative;
+    z-index: 1030;
+}
+
+.navbar .dropdown-menu {
+    z-index: 1031;
+}
+
+.navbar .nav-link {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ============================================
+   BADGES & TAGS
+   ============================================ */
+
+.badge {
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-badge);
+    padding: 4px 10px;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+.table th {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.table td {
+    font-size: 14px;
+    font-weight: 400;
+    vertical-align: middle;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+    border: none;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+a.card:hover,
+.card-hoverable:hover {
+    box-shadow: var(--shadow-card-hover);
+}
+
+.card-header {
+    min-height: var(--height-card-header);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #F0F0F0;
+    background-color: #faf5ef;
+}
+
+.card-header h5,
+.card-header h6,
+.card-header .h5,
+.card-header .h6 {
+    margin-bottom: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #F0F0F0;
+    background: #FAFAFA;
+    min-height: var(--height-card-header);
+    display: flex;
+    align-items: center;
+}
+
+/* ============================================
+   STAT CARDS (dashboard counters)
+   ============================================ */
+
+.stat-card .icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* ============================================
+   ICONS — contextual sizes
+   ============================================ */
+
+/* Standalone action icons (tables, cards) */
+.action-icon,
+.table .bi {
+    font-size: 18px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.action-icon:hover,
+.table .bi:hover {
+    opacity: 0.7;
+}
+
+/* Icons in sidebar / dashboard nav */
+.sidebar-link i,
+.dashboard-nav .nav-link i {
+    font-size: 20px;
+    width: 24px;
+}
+
+/* ============================================
+   TYPOGRAPHY — Mobile  (max-width: 768px)
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    h1,
+    .h1 {
+        font-size: 26px;
+    }
+
+    h2,
+    .h2 {
+        font-size: 22px;
+    }
+
+    h3,
+    .h3 {
+        font-size: 19px;
+    }
+
+    h4,
+    .h4 {
+        font-size: 17px;
+    }
+
+    h5,
+    .h5 {
+        font-size: 15px;
+    }
+
+    h6,
+    .h6 {
+        font-size: 14px;
+    }
+
+    body,
+    p {
+        font-size: 15px;
+    }
+
+    label,
+    .form-label {
+        font-size: 13px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    .btn-lg {
+        font-size: 15px;
+    }
+
+    .navbar .nav-link {
+        font-size: 14px;
+    }
+
+    /* Inputs NEVER below 16px on mobile (iOS zoom prevention) */
+    .form-control,
+    .form-select,
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    /* Adjusted heights */
+    .btn {
+        height: 40px;
+    }
+
+    .btn-lg {
+        height: 46px;
+    }
+
+    .card-header {
+        min-height: 46px;
+    }
+
+    .form-control,
+    .form-select {
+        height: 40px;
+    }
+
+    /* Tighter card padding */
+    .card-body {
+        padding: 14px;
+    }
+
+    .card-header {
+        padding: 0 14px;
+    }
+
+    .card-footer {
+        padding: 10px 14px;
+    }
+
+    /* Button padding */
+    .btn {
+        padding: 0 16px;
+    }
+
+    .btn-lg {
+        padding: 0 20px;
+    }
+}
+
+/* ============================================
+   RTL (Right-to-Left) Support
+   ============================================ */
+
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] .text-start {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+    text-align: left !important;
+}
+
+[dir="rtl"] .ms-1,
+[dir="rtl"] .ms-2,
+[dir="rtl"] .ms-3,
+[dir="rtl"] .ms-4,
+[dir="rtl"] .ms-5,
+[dir="rtl"] .ms-auto {
+    margin-left: 0 !important;
+}
+
+[dir="rtl"] .me-1,
+[dir="rtl"] .me-2,
+[dir="rtl"] .me-3,
+[dir="rtl"] .me-4,
+[dir="rtl"] .me-5,
+[dir="rtl"] .me-auto {
+    margin-right: 0 !important;
+}
+
+[dir="rtl"] .ms-1 {
+    margin-right: 0.25rem !important;
+}
+
+[dir="rtl"] .ms-2 {
+    margin-right: 0.5rem !important;
+}
+
+[dir="rtl"] .ms-3 {
+    margin-right: 1rem !important;
+}
+
+[dir="rtl"] .ms-4 {
+    margin-right: 1.5rem !important;
+}
+
+[dir="rtl"] .ms-5 {
+    margin-right: 3rem !important;
+}
+
+[dir="rtl"] .ms-auto {
+    margin-right: auto !important;
+}
+
+[dir="rtl"] .me-1 {
+    margin-left: 0.25rem !important;
+}
+
+[dir="rtl"] .me-2 {
+    margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .me-3 {
+    margin-left: 1rem !important;
+}
+
+[dir="rtl"] .me-4 {
+    margin-left: 1.5rem !important;
+}
+
+[dir="rtl"] .me-5 {
+    margin-left: 3rem !important;
+}
+
+[dir="rtl"] .me-auto {
+    margin-left: auto !important;
+}
+
+[dir="rtl"] .ps-1,
+[dir="rtl"] .ps-2,
+[dir="rtl"] .ps-3,
+[dir="rtl"] .ps-4,
+[dir="rtl"] .ps-5 {
+    padding-left: 0 !important;
+}
+
+[dir="rtl"] .pe-1,
+[dir="rtl"] .pe-2,
+[dir="rtl"] .pe-3,
+[dir="rtl"] .pe-4,
+[dir="rtl"] .pe-5 {
+    padding-right: 0 !important;
+}
+
+[dir="rtl"] .ps-1 {
+    padding-right: 0.25rem !important;
+}
+
+[dir="rtl"] .ps-2 {
+    padding-right: 0.5rem !important;
+}
+
+[dir="rtl"] .ps-3 {
+    padding-right: 1rem !important;
+}
+
+[dir="rtl"] .ps-4 {
+    padding-right: 1.5rem !important;
+}
+
+[dir="rtl"] .ps-5 {
+    padding-right: 3rem !important;
+}
+
+[dir="rtl"] .pe-1 {
+    padding-left: 0.25rem !important;
+}
+
+[dir="rtl"] .pe-2 {
+    padding-left: 0.5rem !important;
+}
+
+[dir="rtl"] .pe-3 {
+    padding-left: 1rem !important;
+}
+
+[dir="rtl"] .pe-4 {
+    padding-left: 1.5rem !important;
+}
+
+[dir="rtl"] .pe-5 {
+    padding-left: 3rem !important;
+}
+
+[dir="rtl"] .float-start {
+    float: right !important;
+}
+
+[dir="rtl"] .float-end {
+    float: left !important;
+}
+
+[dir="rtl"] .dropdown-menu-end {
+    --bs-position: start;
+}
+
+[dir="rtl"] .border-start {
+    border-left: 0 !important;
+    border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+
+[dir="rtl"] .border-end {
+    border-right: 0 !important;
+    border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+
+[dir="rtl"] .bi {
+    transform: scaleX(1);
+}
+
+/* Icons that should flip in RTL */
+[dir="rtl"] .bi-arrow-left::before {
+    content: "\f12c";
+}
+
+[dir="rtl"] .bi-arrow-right::before {
+    content: "\f121";
+}
+
+[dir="rtl"] .bi-chevron-left::before {
+    content: "\f285";
+}
+
+[dir="rtl"] .bi-chevron-right::before {
+    content: "\f282";
+}
+
+/* Form elements */
+[dir="rtl"] .form-control,
+[dir="rtl"] .form-select {
+    text-align: right;
+}
+
+[dir="rtl"] .input-group> :not(:first-child) {
+    border-radius: var(--radius-input) 0 0 var(--radius-input);
+}
+
+[dir="rtl"] .input-group> :not(:last-child) {
+    border-radius: 0 var(--radius-input) var(--radius-input) 0;
+}
+
+/* ============================================
+   RV — Reservation-style compact UI system
+   Card headers, buttons, labels, inputs, tables
+   ============================================ */
+
+.rv-hdr {
+    background: #d0d8dd !important;
+    color: #1b3a4b !important;
+    border-bottom: 1px solid #bcc5cb !important;
+    padding: 0 16px !important;
+    min-height: 40px !important;
+    height: 40px;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.rv-hdr h6,
+.rv-hdr .modal-title {
+    color: #1b3a4b !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+.rv-hdr .btn-close {
+    filter: none;
+}
+
+.rv-hdr-toggle {
+    cursor: pointer;
+}
+
+.rv-hdr-toggle[aria-expanded="false"] .bi-chevron-up {
+    transform: rotate(180deg);
+}
+
+.rv-chevron {
+    transition: transform 0.2s;
+    font-size: 12px;
+    color: #1b3a4b;
+}
+
+.rv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1.5px solid #C9A258;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.rv-btn-fill {
+    background: #C9A258;
+    color: #fff;
+}
+
+.rv-btn-fill:hover {
+    background: #B89248;
+    border-color: #B89248;
+    color: #fff;
+}
+
+.rv-btn-fill:active {
+    background: #A07840;
+    border-color: #A07840;
+}
+
+.rv-btn-outline {
+    background: transparent;
+    color: #C9A258;
+}
+
+.rv-btn-outline:hover {
+    background: #C9A258;
+    color: #fff;
+}
+
+.rv-btn-outline:active {
+    background: #B89248;
+    color: #fff;
+}
+
+.rv-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.rv-body {
+    padding: 16px !important;
+}
+
+.rv-card .card-body {
+    padding: 16px !important;
+}
+
+.rv-card .card-body.p-0 {
+    padding: 0 !important;
+}
+
+.rv-lbl {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.rv-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8B6844;
+}
+
+.rv-sm {
+    font-size: 13px;
+}
+
+.rv-input {
+    font-size: 13px !important;
+    height: 30px !important;
+}
+
+textarea.rv-input {
+    height: auto !important;
+}
+
+.rv-tbl th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 8px 16px !important;
+}
+
+.rv-tbl td {
+    font-size: 13px;
+    padding: 8px 16px !important;
+}
+
+/* ============================================
+   BREADCRUMBS — underline-hover style
+   ============================================ */
+
+.breadcrumb {
+    font-family: 'Varela Round', sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+.breadcrumb-item+.breadcrumb-item {
+    padding-left: 0;
+}
+
+/* Replace Bootstrap's default "/" separator with a gold dot */
+.breadcrumb-item+.breadcrumb-item::before {
+    content: '' !important;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f1c95c;
+    opacity: 0.6;
+    vertical-align: middle;
+    margin: 0 12px;
+    padding: 0;
+    float: none !important;
+}
+
+/* Idle link */
+.breadcrumb-item a {
+    color: rgba(33, 37, 41, 0.75);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 2px;
+    font-weight: 400;
+    transition: color 0.2s ease;
+    display: inline;
+}
+
+/* Animated underline via ::after */
+.breadcrumb-item a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #8B6844;
+    transition: width 0.25s ease;
+}
+
+/* Hover / active link */
+.breadcrumb-item a:hover {
+    color: #8B6844;
+}
+
+.breadcrumb-item a:hover::after {
+    width: 100%;
+}
+
+/* Current / active page */
+.breadcrumb-item.active {
+    color: #8B6844;
+    font-weight: 500;
+}
+
+/* Status badges */
+.badge-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-under_review {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-completed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Payment status badges */
+.badge-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-partially_paid {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-refunded {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Conversation status badges */
+.badge-active {
+    background: #d1fae5;
+    color: #1b3a4b;
+}
+
+.badge-waiting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-resolved {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-closed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Action button group - compact with gap */
+.action-btns {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.action-btns .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.45rem;
+    font-size: 0.8rem;
+    line-height: 1;
+    border-radius: var(--radius-input, 6px);
+}
+
+/* Mobile: center-align breadcrumbs */
+@media (max-width: 767px) {
+    .breadcrumb {
+        justify-content: center;
+    }
+
+    /* Prevent selects/inputs from overflowing on mobile */
+    .form-select,
+    .form-control,
+    select,
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="url"],
+    textarea {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .card-body,
+    .table-responsive {
+        overflow-x: auto;
+    }
+}

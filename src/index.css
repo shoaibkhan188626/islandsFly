@@ -1,0 +1,49 @@
+:root {
+  --bg: #FBFBFA; /* alabaster */
+  --surface: #FFFFFF; /* white card background */
+  --surface-muted: #faf5ed; /* soft cream */
+  --text: #111111; /* deep obsidian */
+  --muted: #787168; /* gentle muted */
+  --border: rgba(229,231,235,0.6); /* stone-200/60 */
+  --accent: #C2996E; /* warm accent for unfocused state */
+  --accent-dark: #111111; /* black for focused state */
+}
+
+[data-theme='dark'] {
+  --bg: #121210; /* warm Obsidian dark */
+  --surface: #1C1C18; /* soft warm dark charcoal */
+  --surface-muted: #262622; /* soft warm dark charcoal */
+  --text: #FBFBFA; /* alabaster */
+  --muted: #A39C93; /* softer muted */
+  --border: rgba(255, 255, 255, 0.08); /* subtle white border */
+  --accent: #D7B18A; /* brighter warm accent */
+  --accent-dark: #FBFBFA; /* alabaster for focused states */
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Distinct font stacks used in components */
+.font-hero { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; }
+.font-ui { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.font-ballet { font-family: "Ballet", cursive; }
+
+button, input, select, textarea { font: inherit; }
+
+::selection { background: rgba(17,17,17,0.06); }
+
+/* Utility adjustments for the design language */
+.track-tight { letter-spacing: 0.14em; }
+.track-wide { letter-spacing: 0.25em; }

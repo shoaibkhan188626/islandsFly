@@ -1,0 +1,119 @@
+/**
+ * Islandsfly - PWA Install & Service Worker Registration
+ */
+(function() {
+    'use strict';
+
+    let deferredPrompt = null;
+
+    // Register the PWA service worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => {
+                    console.log('[PWA] Service worker registered, scope:', reg.scope);
+
+                    // Check for updates periodically
+                    setInterval(() => reg.update(), 60 * 60 * 1000); // every hour
+                })
+                .catch(err => console.error('[PWA] SW registration failed:', err));
+        });
+    }
+
+    // Capture the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstallBanner();
+    });
+
+    // Show install banner
+    function showInstallBanner() {
+        // Don't show if already dismissed this session
+        if (sessionStorage.getItem('pwa-install-dismissed')) return;
+        // Don't show if already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+        const banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = `
+            <div class="pwa-banner-content">
+                <img src="/favicon_io/android-chrome-192x192.png" alt="Islandsfly" class="pwa-banner-icon">
+                <div class="pwa-banner-text">
+                    <strong>Install Islandsfly</strong>
+                    <span>Add to home screen for quick access</span>
+                </div>
+                <button id="pwa-install-btn" class="pwa-banner-btn">Install</button>
+                <button id="pwa-dismiss-btn" class="pwa-banner-close" aria-label="Dismiss">&times;</button>
+            </div>
+        `;
+        document.body.appendChild(banner);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => banner.classList.add('show'));
+        });
+
+        document.getElementById('pwa-install-btn').addEventListener('click', installApp);
+        document.getElementById('pwa-dismiss-btn').addEventListener('click', dismissBanner);
+    }
+
+    // Trigger install prompt
+    async function installApp() {
+        if (!deferredPrompt) return;
+
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('[PWA] Install prompt outcome:', outcome);
+        deferredPrompt = null;
+        dismissBanner();
+    }
+
+    // Dismiss banner
+    function dismissBanner() {
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+            banner.classList.remove('show');
+            setTimeout(() => banner.remove(), 300);
+        }
+        sessionStorage.setItem('pwa-install-dismissed', '1');
+    }
+
+    // Detect successful install
+    window.addEventListener('appinstalled', () => {
+        console.log('[PWA] App installed successfully');
+        deferredPrompt = null;
+        dismissBanner();
+    });
+
+    // Online/Offline status indicator
+    function updateOnlineStatus() {
+        if (!navigator.onLine) {
+            showOfflineToast();
+        }
+    }
+
+    function showOfflineToast() {
+        // Use IslandsflyRealtime toast if available
+        if (window.IslandsflyRealtime?.showToastNotification) {
+            window.IslandsflyRealtime.showToastNotification(
+                'You\'re offline',
+                'Some features may be limited until you reconnect.',
+                'warning'
+            );
+        }
+    }
+
+    window.addEventListener('online', () => {
+        if (window.IslandsflyRealtime?.showToastNotification) {
+            window.IslandsflyRealtime.showToastNotification(
+                'Back online',
+                'Your connection has been restored.',
+                'success'
+            );
+        }
+    });
+
+    window.addEventListener('offline', updateOnlineStatus);
+
+})();

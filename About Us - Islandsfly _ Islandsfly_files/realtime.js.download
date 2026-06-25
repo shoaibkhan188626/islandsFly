@@ -1,0 +1,741 @@
+/**
+ * Islandsfly - Real-time functionality
+ * Handles WebSocket connections, chat, notifications, FCM, and live updates
+ */
+
+(function() {
+    'use strict';
+
+    // Configuration from meta tags (Pusher cloud service)
+    const config = {
+        pusherKey: document.querySelector('meta[name="pusher-key"]')?.content,
+        pusherCluster: document.querySelector('meta[name="pusher-cluster"]')?.content || 'ap2',
+        userId: document.querySelector('meta[name="user-id"]')?.content,
+        csrfToken: document.querySelector('meta[name="csrf-token"]')?.content,
+        isStaff: document.querySelector('meta[name="is-staff"]')?.content === 'true',
+    };
+
+    // Firebase configuration from meta tags
+    const firebaseConfig = {
+        apiKey: document.querySelector('meta[name="firebase-api-key"]')?.content,
+        authDomain: document.querySelector('meta[name="firebase-auth-domain"]')?.content,
+        projectId: document.querySelector('meta[name="firebase-project-id"]')?.content,
+        storageBucket: document.querySelector('meta[name="firebase-storage-bucket"]')?.content,
+        messagingSenderId: document.querySelector('meta[name="firebase-messaging-sender-id"]')?.content,
+        appId: document.querySelector('meta[name="firebase-app-id"]')?.content,
+    };
+    const fcmVapidKey = document.querySelector('meta[name="fcm-vapid-key"]')?.content;
+
+    // Shared Pusher instance (using Pusher cloud service)
+    let pusherInstance = null;
+
+    function getPusher() {
+        if (window.location.hostname.endsWith('.test')) {
+            console.log('[Realtime] Disabled on local .test domain');
+            return null;
+        }
+
+        if (pusherInstance) return pusherInstance;
+
+        console.log('Pusher config:', {
+            key: config.pusherKey,
+            cluster: config.pusherCluster,
+            pusherLoaded: !!window.Pusher
+        });
+
+        if (!config.pusherKey) {
+            console.warn('Pusher key not found in meta tag. Check PUSHER_APP_KEY in .env');
+            return null;
+        }
+
+        if (!window.Pusher) {
+            console.warn('Pusher.js not loaded');
+            return null;
+        }
+
+        pusherInstance = new Pusher(config.pusherKey, {
+            cluster: config.pusherCluster,
+            forceTLS: true,
+            enabledTransports: ['ws', 'wss'],
+            authEndpoint: '/broadcasting/auth',
+            auth: {
+                headers: {
+                    'X-CSRF-TOKEN': config.csrfToken,
+                }
+            }
+        });
+
+        pusherInstance.connection.bind('connected', () => {
+            console.log('Pusher WebSocket connected');
+        });
+
+        pusherInstance.connection.bind('error', (err) => {
+            console.error('Pusher WebSocket error:', err);
+        });
+
+        return pusherInstance;
+    }
+
+    // Request browser notification permission
+    function requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    }
+
+    // Show browser notification
+    function showBrowserNotification(title, body, url, icon) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const notification = new Notification(title, {
+                body: body,
+                icon: icon || '/img/islandsflylogo.png',
+                badge: '/img/islandsflylogo.png',
+                tag: 'islandsfly-' + Date.now(),
+                requireInteraction: false,
+            });
+
+            notification.onclick = function() {
+                window.focus();
+                if (url) window.location.href = url;
+                notification.close();
+            };
+
+            setTimeout(() => notification.close(), 5000);
+        }
+    }
+
+    // Show in-app toast notification
+    function showToastNotification(title, message, type = 'info') {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+        }
+
+        const toastId = 'toast-' + Date.now();
+        const iconMap = {
+            'info': 'bi-info-circle text-primary',
+            'success': 'bi-check-circle text-success',
+            'warning': 'bi-exclamation-circle text-warning',
+            'error': 'bi-x-circle text-danger',
+            'chat': 'bi-chat-dots text-info',
+            'reservation': 'bi-calendar-check text-success',
+            'payment': 'bi-credit-card text-success',
+        };
+
+        const toastHtml = `
+            <div id="${toastId}" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="bi ${iconMap[type] || iconMap.info} me-2"></i>
+                    <strong class="me-auto">${title}</strong>
+                    <small>Just now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">${message}</div>
+            </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', toastHtml);
+
+        const toastEl = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
+        toast.show();
+
+        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+    }
+
+    // Update notification badge count
+    function updateNotificationBadge() {
+        fetch('/api/notifications/unread-count')
+            .then(response => response.json())
+            .then(data => {
+                const badges = document.querySelectorAll('#notificationCount, .notification-badge-count');
+                badges.forEach(badge => {
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.classList.remove('d-none');
+                        } else {
+                            badge.classList.add('d-none');
+                        }
+                    }
+                });
+            })
+            .catch(console.error);
+    }
+
+    // Update sidebar messages badge count
+    function updateSidebarMessagesBadge() {
+        fetch('/api/chat/unread-count')
+            .then(response => response.json())
+            .then(data => {
+                const badges = document.querySelectorAll('.sidebar-messages-badge');
+                badges.forEach(badge => {
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.classList.remove('d-none');
+                        } else {
+                            badge.classList.add('d-none');
+                        }
+                    }
+                });
+            })
+            .catch(console.error);
+    }
+
+    // Play notification sound
+    function playNotificationSound() {
+        try {
+            const audio = new Audio('/sounds/notification.mp3');
+            audio.volume = 0.5;
+            audio.play().catch(() => {});
+        } catch (e) {
+            // Sound not available
+        }
+    }
+
+    // Chat functionality
+    const Chat = {
+        conversationId: null,
+        container: null,
+        channel: null,
+
+        init: function(conversationId, containerId) {
+            this.conversationId = conversationId;
+            this.container = document.getElementById(containerId || 'messageContainer');
+
+            if (!this.container || !conversationId) {
+                return;
+            }
+
+            this.scrollToBottom();
+            this.initializeWebSocket();
+            this.initializeForm();
+        },
+
+        initializeWebSocket: function() {
+            const pusher = getPusher();
+            if (!pusher) return;
+
+            const channelName = 'private-conversation.' + this.conversationId;
+            this.channel = pusher.subscribe(channelName);
+
+            this.channel.bind('pusher:subscription_succeeded', () => {
+                console.log('Subscribed to conversation channel:', channelName);
+            });
+
+            this.channel.bind('pusher:subscription_error', (error) => {
+                console.error('Subscription error:', error);
+            });
+
+            this.channel.bind('message.new', (data) => {
+                console.log('>>> RECEIVED message.new event:', data);
+                this.appendMessage(data);
+                this.scrollToBottom();
+
+                if (data.sender_id != config.userId) {
+                    showToastNotification('New Message', data.sender_name + ': ' + data.message.substring(0, 50), 'chat');
+                    showBrowserNotification('New Message from ' + data.sender_name, data.message.substring(0, 100));
+                    playNotificationSound();
+                    updateNotificationBadge();
+                    // Only update sidebar messages badge for customers (non-staff)
+                    if (!config.isStaff) {
+                        updateSidebarMessagesBadge();
+                    }
+                }
+            });
+
+            // Debug: log all events on this channel
+            this.channel.bind_global((eventName, data) => {
+                console.log('>>> Channel event:', eventName, data);
+            });
+        },
+
+        initializeForm: function() {
+            const form = this.container?.closest('.card')?.querySelector('form');
+            if (!form) return;
+
+            let isSubmitting = false;
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (isSubmitting) return;
+
+                const formData = new FormData(form);
+                const messageInput = form.querySelector('input[name="message"]');
+                const submitBtn = form.querySelector('button[type="submit"]');
+
+                if (!messageInput.value.trim()) return;
+
+                isSubmitting = true;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Sending...';
+
+                try {
+                    // Get socket ID for toOthers() to work
+                    const socketId = pusherInstance?.connection?.socket_id;
+
+                    const headers = {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    };
+
+                    if (socketId) {
+                        headers['X-Socket-ID'] = socketId;
+                    }
+
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: headers
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('Chat send response:', result);
+
+                    if (result.success) {
+                        // Append the sent message to the UI immediately
+                        console.log('Message data:', result.message);
+                        if (result.message) {
+                            const msgData = {
+                                id: result.message.id,
+                                sender_id: config.userId,
+                                sender_name: 'You',
+                                message: result.message.message,
+                                attachment: result.message.attachment_url,
+                                created_at: result.message.created_at || new Date().toISOString(),
+                            };
+                            console.log('Appending message:', msgData);
+                            this.appendMessage(msgData);
+                        }
+
+                        messageInput.value = '';
+                        const attachmentName = form.querySelector('.attachment-name');
+                        if (attachmentName) attachmentName.textContent = '';
+                        const fileInput = form.querySelector('input[type="file"]');
+                        if (fileInput) fileInput.value = '';
+                        this.scrollToBottom();
+                    } else {
+                        showToastNotification('Error', result.message || 'Failed to send message', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    showToastNotification('Error', 'Failed to send message. Please try again.', 'error');
+                } finally {
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="bi bi-send me-1"></i>Send';
+                }
+            });
+        },
+
+        appendMessage: function(data) {
+            const isOwn = data.sender_id == config.userId;
+            const messageHtml = `
+                <div class="mb-3 ${isOwn ? 'text-end' : ''}">
+                    <div class="d-inline-block rounded p-3 ${isOwn ? 'bg-primary text-white' : 'bg-light'}" style="max-width: 75%;">
+                        <div class="d-flex align-items-center mb-1 ${isOwn ? 'justify-content-end' : ''}">
+                            <small class="${isOwn ? 'text-white-50' : 'text-muted'}">
+                                ${isOwn ? 'You' : this.escapeHtml(data.sender_name)}
+                                <span class="mx-1">•</span>
+                                ${new Date(data.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </small>
+                        </div>
+                        <div>${this.escapeHtml(data.message)}</div>
+                        ${data.attachment ? `
+                            <div class="mt-2">
+                                <a href="${data.attachment}" target="_blank" class="${isOwn ? 'text-white' : 'text-primary'}">
+                                    <i class="bi bi-paperclip me-1"></i>View Attachment
+                                </a>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            this.container.insertAdjacentHTML('beforeend', messageHtml);
+        },
+
+        scrollToBottom: function() {
+            if (this.container) {
+                this.container.scrollTop = this.container.scrollHeight;
+            }
+        },
+
+        escapeHtml: function(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    };
+
+    // Notification channel listener
+    const NotificationListener = {
+        channel: null,
+
+        init: function() {
+            if (!config.userId) return;
+
+            const pusher = getPusher();
+            if (!pusher) return;
+
+            const channelName = 'private-App.Models.User.' + config.userId;
+            this.channel = pusher.subscribe(channelName);
+
+            this.channel.bind('pusher:subscription_succeeded', () => {
+                console.log('Subscribed to user notification channel');
+            });
+
+            // Listen for broadcast notifications
+            this.channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', (data) => {
+                this.handleNotification(data);
+            });
+
+            // Listen for reservation updates (for customers)
+            this.channel.bind('reservation.updated', (data) => {
+                this.handleReservationUpdate(data);
+            });
+        },
+
+        handleNotification: function(data) {
+            console.log('Received notification:', data);
+
+            updateNotificationBadge();
+
+            const title = data.title || 'Notification';
+            const message = data.message || 'You have a new notification';
+            const type = this.getNotificationType(data.type);
+
+            showToastNotification(title, message, type);
+            showBrowserNotification(title, message, data.url);
+            playNotificationSound();
+
+            if (typeof fetchNotifications === 'function') {
+                fetchNotifications();
+            }
+        },
+
+        handleReservationUpdate: function(data) {
+            console.log('Reservation updated:', data);
+
+            const actionMessages = {
+                'status_changed': `Your reservation ${data.reservation_number} status changed to ${data.status_label}`,
+                'payment_recorded': `Payment received for reservation ${data.reservation_number}`,
+                'payment_deleted': `Payment updated for reservation ${data.reservation_number}`,
+                'updated': `Reservation ${data.reservation_number} has been updated`,
+            };
+
+            const message = actionMessages[data.action] || `Reservation ${data.reservation_number} updated`;
+            showToastNotification('Reservation Update', message, 'reservation');
+            playNotificationSound();
+
+            // Update UI elements if on reservation page
+            this.updateReservationUI(data);
+        },
+
+        updateReservationUI: function(data) {
+            // Update status badges
+            const statusBadges = document.querySelectorAll(`[data-reservation-status="${data.id}"]`);
+            statusBadges.forEach(badge => {
+                badge.className = `badge badge-${data.status}`;
+                badge.textContent = data.status_label;
+            });
+
+            // Update payment status badges
+            const paymentBadges = document.querySelectorAll(`[data-payment-status="${data.id}"]`);
+            paymentBadges.forEach(badge => {
+                badge.className = `badge badge-${data.payment_status}`;
+                badge.textContent = data.payment_status_label;
+            });
+
+            // Update amounts
+            const totalElements = document.querySelectorAll(`[data-reservation-total="${data.id}"]`);
+            totalElements.forEach(el => el.textContent = data.formatted_total);
+
+            const paidElements = document.querySelectorAll(`[data-reservation-paid="${data.id}"]`);
+            paidElements.forEach(el => el.textContent = data.formatted_paid);
+
+            const balanceElements = document.querySelectorAll(`[data-reservation-balance="${data.id}"]`);
+            balanceElements.forEach(el => el.textContent = data.formatted_balance);
+        },
+
+        getNotificationType: function(type) {
+            const typeMap = {
+                'new_reservation': 'reservation',
+                'reservation_status_changed': 'info',
+                'new_chat_message': 'chat',
+                'staff_assigned': 'info',
+            };
+            return typeMap[type] || 'info';
+        }
+    };
+
+    // Admin reservation listener (for staff)
+    const AdminReservationListener = {
+        channel: null,
+
+        init: function() {
+            if (!config.isStaff) return;
+
+            const pusher = getPusher();
+            if (!pusher) return;
+
+            // Subscribe to public admin channel
+            this.channel = pusher.subscribe('admin.reservations');
+
+            this.channel.bind('pusher:subscription_succeeded', () => {
+                console.log('Subscribed to admin reservations channel');
+            });
+
+            this.channel.bind('reservation.updated', (data) => {
+                this.handleReservationUpdate(data);
+            });
+        },
+
+        handleReservationUpdate: function(data) {
+            console.log('Admin received reservation update:', data);
+
+            const actionMessages = {
+                'status_changed': `Reservation ${data.reservation_number} status: ${data.status_label}`,
+                'payment_recorded': `Payment recorded for ${data.reservation_number} - ${data.customer_name}`,
+                'payment_deleted': `Payment removed from ${data.reservation_number}`,
+                'updated': `Reservation ${data.reservation_number} updated`,
+            };
+
+            const message = actionMessages[data.action] || `Reservation ${data.reservation_number} updated`;
+            showToastNotification('Reservation Update', message, data.action.includes('payment') ? 'payment' : 'reservation');
+
+            // Update any matching rows in reservation list
+            this.updateReservationRow(data);
+        },
+
+        updateReservationRow: function(data) {
+            // Update status in table rows
+            const statusCells = document.querySelectorAll(`tr[data-reservation-id="${data.id}"] .reservation-status`);
+            statusCells.forEach(cell => {
+                cell.innerHTML = `<span class="badge badge-${data.status}">${data.status_label}</span>`;
+            });
+
+            // Update payment status
+            const paymentCells = document.querySelectorAll(`tr[data-reservation-id="${data.id}"] .payment-status`);
+            paymentCells.forEach(cell => {
+                cell.innerHTML = `<span class="badge badge-${data.payment_status}">${data.payment_status_label}</span>`;
+            });
+
+            // Highlight the updated row briefly
+            const rows = document.querySelectorAll(`tr[data-reservation-id="${data.id}"]`);
+            rows.forEach(row => {
+                row.style.transition = 'background-color 0.5s';
+                row.style.backgroundColor = '#fff3cd';
+                setTimeout(() => {
+                    row.style.backgroundColor = '';
+                }, 2000);
+            });
+
+            // Also update data-attribute based elements (for detail pages)
+            const statusBadges = document.querySelectorAll(`[data-reservation-status="${data.id}"]`);
+            statusBadges.forEach(badge => {
+                badge.className = badge.className.replace(/badge-\w+/, `badge-${data.status}`);
+                badge.textContent = data.status_label;
+            });
+
+            const paymentBadges = document.querySelectorAll(`[data-payment-status="${data.id}"]`);
+            paymentBadges.forEach(badge => {
+                badge.className = badge.className.replace(/badge-\w+/, `badge-${data.payment_status}`);
+                badge.textContent = data.payment_status_label;
+            });
+
+            const totalElements = document.querySelectorAll(`[data-reservation-total="${data.id}"]`);
+            totalElements.forEach(el => el.textContent = data.formatted_total);
+
+            const paidElements = document.querySelectorAll(`[data-reservation-paid="${data.id}"]`);
+            paidElements.forEach(el => el.textContent = data.formatted_paid);
+
+            const balanceElements = document.querySelectorAll(`[data-reservation-balance="${data.id}"]`);
+            balanceElements.forEach(el => el.textContent = data.formatted_balance);
+        }
+    };
+
+    // FCM (Firebase Cloud Messaging) functionality
+    const FCM = {
+        initialized: false,
+        messaging: null,
+
+        init: async function() {
+            if (this.initialized || !config.userId) return;
+            if (!('serviceWorker' in navigator)) {
+                console.warn('Service workers are not supported');
+                return;
+            }
+            if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+                console.warn('Firebase configuration not found in meta tags');
+                return;
+            }
+
+            try {
+                // Use the unified PWA service worker (registered by pwa.js)
+                const registration = await navigator.serviceWorker.ready;
+                console.log('Service Worker ready for FCM:', registration.scope);
+
+                // Send Firebase config to the service worker
+                if (registration.active) {
+                    registration.active.postMessage({
+                        type: 'FIREBASE_CONFIG',
+                        config: firebaseConfig
+                    });
+                }
+
+                // Wait for Firebase SDK to be available (loaded via CDN in layouts)
+                if (typeof firebase === 'undefined') {
+                    console.warn('Firebase SDK not loaded');
+                    return;
+                }
+
+                // Initialize Firebase if not already
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+
+                this.messaging = firebase.messaging();
+
+                // Handle foreground messages
+                this.messaging.onMessage((payload) => {
+                    console.log('Foreground message received:', payload);
+
+                    const title = payload.notification?.title || 'New Notification';
+                    const body = payload.notification?.body || '';
+                    const url = payload.data?.url;
+
+                    showToastNotification(title, body, this.getNotificationType(payload.data?.type));
+                    showBrowserNotification(title, body, url);
+                    playNotificationSound();
+                    updateNotificationBadge();
+
+                    if (typeof fetchNotifications === 'function') {
+                        fetchNotifications();
+                    }
+                });
+
+                this.initialized = true;
+                console.log('FCM initialized successfully');
+
+            } catch (error) {
+                console.error('FCM initialization failed:', error);
+            }
+        },
+
+        requestPermissionAndGetToken: async function() {
+            if (!this.messaging) {
+                await this.init();
+            }
+            if (!this.messaging) return null;
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    console.log('Notification permission denied');
+                    return null;
+                }
+
+                const registration = await navigator.serviceWorker.ready;
+                const token = await this.messaging.getToken({
+                    vapidKey: fcmVapidKey,
+                    serviceWorkerRegistration: registration
+                });
+
+                if (token) {
+                    console.log('FCM Token:', token);
+                    await this.saveTokenToServer(token);
+                    return token;
+                }
+            } catch (error) {
+                console.error('Error getting FCM token:', error);
+            }
+            return null;
+        },
+
+        saveTokenToServer: async function(token) {
+            try {
+                await fetch('/api/notifications/fcm-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': config.csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        device_type: 'web'
+                    })
+                });
+                console.log('FCM token saved to server');
+            } catch (error) {
+                console.error('Error saving FCM token:', error);
+            }
+        },
+
+        getNotificationType: function(type) {
+            const typeMap = {
+                'new_reservation': 'reservation',
+                'reservation_status_changed': 'info',
+                'new_chat_message': 'chat',
+                'staff_assigned': 'info',
+            };
+            return typeMap[type] || 'info';
+        }
+    };
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (config.userId) {
+            NotificationListener.init();
+
+            // FCM for background push notifications when browser is closed
+            // Initialize FCM but don't auto-request permission - the notification modal will handle that
+            FCM.init().then(() => {
+                // Only auto-request if permission was already granted (returning user)
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    FCM.requestPermissionAndGetToken();
+                }
+            });
+        }
+
+        if (config.isStaff) {
+            AdminReservationListener.init();
+        }
+
+        // Auto-initialize chat
+        const chatContainer = document.getElementById('messageContainer');
+        const conversationId = chatContainer?.dataset?.conversationId ||
+                               document.querySelector('[data-conversation-id]')?.dataset?.conversationId;
+
+        if (chatContainer && conversationId) {
+            Chat.init(conversationId, 'messageContainer');
+        }
+    });
+
+    // Expose to global scope
+    window.IslandsflyRealtime = {
+        Chat: Chat,
+        NotificationListener: NotificationListener,
+        AdminReservationListener: AdminReservationListener,
+        FCM: FCM,
+        showToastNotification: showToastNotification,
+        showBrowserNotification: showBrowserNotification,
+        updateNotificationBadge: updateNotificationBadge,
+        updateSidebarMessagesBadge: updateSidebarMessagesBadge,
+        requestNotificationPermission: requestNotificationPermission,
+        playNotificationSound: playNotificationSound,
+        getPusher: getPusher,
+    };
+
+})();
