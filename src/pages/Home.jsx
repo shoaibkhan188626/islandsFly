@@ -34,13 +34,15 @@ const Home = () => {
         <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <motion.div className="lg:col-span-5 space-y-6" variants={containerVariants}>
             <motion.span variants={itemVariants} className="text-sm uppercase track-tight text-[var(--muted)] font-ui">{t('nav.properties')}</motion.span>
-            <motion.h1 variants={itemVariants} className="text-4xl font-hero font-semibold leading-tight">{t('home.hero.title')}</motion.h1>
+            <motion.h1 variants={itemVariants} className="text-3xl md:text-4xl font-hero font-semibold leading-tight">{t('home.hero.title')}</motion.h1>
             <motion.p variants={itemVariants} className="text-base text-[var(--muted)] max-w-lg">{t('home.hero.subtitle')}</motion.p>
-            <motion.div variants={itemVariants} className="flex gap-4">
-              <Link to="/book">
-                <Button size="md">{t('home.buttons.plan')}</Button>
-              </Link>
-              <a href="#experience" className="text-sm font-ui text-[var(--muted)] underline underline-offset-4">{t('home.buttons.explore')}</a>
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+              <Button as={Link} to="/book" size="md" className="w-full sm:w-auto">
+                {t('home.buttons.plan')}
+              </Button>
+              <Button as="a" href="#experience" size="md" className="w-full sm:w-auto">
+                {t('home.buttons.explore')}
+              </Button>
             </motion.div>
           </motion.div>
 

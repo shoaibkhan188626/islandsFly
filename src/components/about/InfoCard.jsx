@@ -2,7 +2,7 @@ export default function InfoCard({ title, text, active = false }) {
   return (
     <article
       className={`rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 text-center shadow-sm transition duration-300 ${
-        active ? 'ring-2 ring-[var(--accent)]/30' : ''
+        active ? "ring-2 ring-[var(--accent)]/30" : ""
       } hover:border-[var(--accent)] hover:-translate-y-1 hover:shadow-md`}
     >
       <div className="flex justify-center">

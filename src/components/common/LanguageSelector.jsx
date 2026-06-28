@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '../../context/LanguageContext';
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "../../context/LanguageContext";
 
 const LANGUAGES = [
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'de', label: 'German', flag: '🇩🇪' },
-  { code: 'ru', label: 'Russian', flag: '🇷🇺' },
-  { code: 'zh', label: '中文', flag: '🇨🇳' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "de", label: "German", flag: "🇩🇪" },
+  { code: "ru", label: "Russian", flag: "🇷🇺" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
+  { code: "ja", label: "日本語", flag: "🇯🇵" },
 ];
 
 export default function LanguageSelector() {
@@ -19,8 +19,8 @@ export default function LanguageSelector() {
     function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
+    document.addEventListener("click", onDoc);
+    return () => document.removeEventListener("click", onDoc);
   }, []);
 
   const selected = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
@@ -36,9 +36,9 @@ export default function LanguageSelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded text-sm font-ui"
         style={{
-          color: isOpen ? 'var(--accent-dark)' : 'var(--accent)',
-          borderColor: isOpen ? 'var(--accent-dark)' : 'var(--accent)',
-          borderWidth: '1px',
+          color: isOpen ? "var(--accent-dark)" : "var(--accent)",
+          borderColor: isOpen ? "var(--accent-dark)" : "var(--accent)",
+          borderWidth: "1px",
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -63,11 +63,17 @@ export default function LanguageSelector() {
                 onClick={() => handleSelect(l)}
                 className="w-full px-4 py-2 text-left text-sm font-ui flex items-center gap-2 whitespace-nowrap cursor-pointer"
                 style={{
-                  color: selected.code === l.code ? 'var(--accent-dark)' : 'var(--accent)',
-                  backgroundColor: selected.code === l.code ? 'var(--surface-muted)' : 'var(--surface)',
+                  color:
+                    selected.code === l.code
+                      ? "var(--accent-dark)"
+                      : "var(--accent)",
+                  backgroundColor:
+                    selected.code === l.code
+                      ? "var(--surface-muted)"
+                      : "var(--surface)",
                 }}
                 whileHover={{
-                  backgroundColor: 'var(--surface-muted)',
+                  backgroundColor: "var(--surface-muted)",
                 }}
               >
                 <span className="text-base">{l.flag}</span>

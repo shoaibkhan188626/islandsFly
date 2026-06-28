@@ -3,7 +3,8 @@ import { sameDay } from "../../utils/dateUtils";
 
 const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const normalizeDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const normalizeDate = (date) =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
 const isBetween = (date, start, end) => {
   if (!start || !end) return false;
@@ -67,7 +68,11 @@ const BookingCalendar = ({ value, onChange }) => {
   };
 
   const updateMonth = (offset) => {
-    const next = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + offset, 1);
+    const next = new Date(
+      displayMonth.getFullYear(),
+      displayMonth.getMonth() + offset,
+      1,
+    );
     onChange({ ...value, month: next });
   };
 
@@ -75,22 +80,39 @@ const BookingCalendar = ({ value, onChange }) => {
     <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
       <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] pb-3 mb-3">
         <div>
-          <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)] font-ui">Travel calendar</p>
-          <h2 className="text-lg font-semibold text-[var(--text)]">Select dates</h2>
+          <p className="text-sm uppercase tracking-[0.18em] text-[var(--muted)] font-ui">
+            Travel calendar
+          </p>
+          <h2 className="text-lg font-semibold text-[var(--text)]">
+            Select dates
+          </h2>
         </div>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={() => updateMonth(-1)} className="rounded border border-[var(--border)] px-2 py-1 text-[var(--text)] cursor-pointer">
+          <button
+            type="button"
+            onClick={() => updateMonth(-1)}
+            className="rounded border border-[var(--border)] px-2 py-1 text-[var(--text)] cursor-pointer"
+          >
             ←
           </button>
-          <button type="button" onClick={() => updateMonth(1)} className="rounded border border-[var(--border)] px-2 py-1 text-[var(--text)] cursor-pointer">
+          <button
+            type="button"
+            onClick={() => updateMonth(1)}
+            className="rounded border border-[var(--border)] px-2 py-1 text-[var(--text)] cursor-pointer"
+          >
             →
           </button>
         </div>
       </div>
 
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm font-medium text-[var(--text)]">{monthLabel}</span>
-        <div className="rounded-full bg-[var(--text)] px-3 py-1 text-xs text-[var(--bg)]">{value.start ? `Depart ${value.start.getDate()}` : "Start"}{value.end ? ` • Return ${value.end.getDate()}` : ""}</div>
+        <span className="text-sm font-medium text-[var(--text)]">
+          {monthLabel}
+        </span>
+        <div className="rounded-full bg-[var(--text)] px-3 py-1 text-xs text-[var(--bg)]">
+          {value.start ? `Depart ${value.start.getDate()}` : "Start"}
+          {value.end ? ` • Return ${value.end.getDate()}` : ""}
+        </div>
       </div>
 
       <div className="grid grid-cols-7 items-center gap-2 text-center text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
@@ -101,12 +123,25 @@ const BookingCalendar = ({ value, onChange }) => {
 
       <div className="mt-2 grid grid-cols-7 gap-2">
         {monthDays.map((date, index) => {
-          if (!date) return <div key={`pad-${index}`} className="h-9 rounded bg-[var(--bg)]" />;
-          const isSelected = sameDay(date, value.start) || sameDay(date, value.end);
-          const isRange = value.start && value.end && isBetween(date, value.start, value.end);
+          if (!date)
+            return (
+              <div
+                key={`pad-${index}`}
+                className="h-9 rounded bg-[var(--bg)]"
+              />
+            );
+          const isSelected =
+            sameDay(date, value.start) || sameDay(date, value.end);
+          const isRange =
+            value.start && value.end && isBetween(date, value.start, value.end);
 
           return (
-            <button key={date.toISOString()} type="button" onClick={() => handleDateClick(date)} className={`flex h-9 items-center justify-center rounded text-sm font-medium transition cursor-pointer ${isSelected ? 'bg-[var(--text)] text-[var(--bg)]' : isRange ? 'bg-[var(--bg)] text-[var(--text)]' : 'bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--bg)]'}`}>
+            <button
+              key={date.toISOString()}
+              type="button"
+              onClick={() => handleDateClick(date)}
+              className={`flex h-9 items-center justify-center rounded text-sm font-medium transition cursor-pointer ${isSelected ? "bg-[var(--text)] text-[var(--bg)]" : isRange ? "bg-[var(--bg)] text-[var(--text)]" : "bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--bg)]"}`}
+            >
               {date.getDate()}
             </button>
           );

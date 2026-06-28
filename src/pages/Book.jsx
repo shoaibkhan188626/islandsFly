@@ -28,7 +28,7 @@ const Book = () => {
 
   return (
     <Container>
-      <div className="grid gap-8 xl:grid-cols-[1.25fr_0.85fr]">
+      <div className="grid gap-8 lg:grid-cols-[1.25fr_0.85fr]">
         <section className="space-y-6">
           <div className="rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] p-10 shadow-[0_20px_60px_rgba(16,24,40,0.08)]">
             <span className="text-sm uppercase tracking-[0.28em] text-[var(--muted)]">{t('booking.details.title')}</span>

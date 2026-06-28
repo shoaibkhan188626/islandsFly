@@ -33,14 +33,14 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl shadow-sm transition-colors duration-300">
-      <div className="mx-auto max-w-[1600px] px-8 py-4">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-8">
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-4">
+        <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-[auto_1fr_auto]">
           {/* Left Section */}
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-8">
             {/* Weather */}
             {!loading && weather && (
               <motion.div
-                className="flex items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-wider"
+                className="hidden sm:flex items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-wider"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
@@ -101,22 +101,31 @@ const Header = () => {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-3 justify-self-end">
+          <div className="flex flex-wrap items-center justify-end gap-3 justify-self-end">
             <ThemeToggle />
 
             <LanguageSelector />
 
-            <Link
-              to="/contact"
-              className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-5 py-2 text-xs uppercase tracking-[0.15em] text-[var(--text)] transition hover:bg-[var(--surface)] whitespace-nowrap"
-            >
+            <Button as={Link} to="/contact" size="sm" variant="link" className="whitespace-nowrap">
               Contact
-            </Link>
+            </Button>
 
-            <Link to="/book">
+            <Link to="/book" className="whitespace-nowrap">
               <Button size="sm">Book</Button>
             </Link>
           </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap justify-center gap-2 lg:hidden">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:bg-[var(--surface)]"
+            >
+              {t(`nav.${item.key}`)}
+            </NavLink>
+          ))}
         </div>
       </div>
     </header>

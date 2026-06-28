@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const CATEGORIES = [
-  { key: 'resort', label: 'Resort' },
-  { key: 'city-hotels', label: 'City Hotels' },
-  { key: 'guesthouse-hotels', label: 'Guesthouse / Hotels' },
-  { key: 'liveaboard-trips', label: 'Liveaboard Trips' },
+  { key: "resort", label: "Resort" },
+  { key: "city-hotels", label: "City Hotels" },
+  { key: "guesthouse-hotels", label: "Guesthouse / Hotels" },
+  { key: "liveaboard-trips", label: "Liveaboard Trips" },
 ];
 
 export default function CategoriesDropdown() {
@@ -17,8 +17,8 @@ export default function CategoriesDropdown() {
     function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
+    document.addEventListener("click", onDoc);
+    return () => document.removeEventListener("click", onDoc);
   }, []);
 
   return (
@@ -26,7 +26,7 @@ export default function CategoriesDropdown() {
       <motion.button
         onClick={() => setOpen((s) => !s)}
         className="text-sm font-ui uppercase tracking-[0.18em] py-1"
-        style={{ color: 'var(--accent)' }}
+        style={{ color: "var(--accent)" }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >

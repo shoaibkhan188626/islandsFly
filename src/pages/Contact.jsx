@@ -5,7 +5,7 @@ import { FaEnvelope, FaPhone, FaWhatsapp, FaMapMarkerAlt, FaFacebookF, FaInstagr
 const Contact = () => {
   return (
     <div>
-      <header className="bg-[#47261a] text-white py-12">
+      <header className="bg-[#47261a] text-white py-8 sm:py-12">
         <Container>
           <h1 className="text-3xl md:text-4xl font-hero text-center">Get in Touch</h1>
           <p className="text-center mt-2 text-sm text-white/80">Have questions? We'd love to hear from you.</p>

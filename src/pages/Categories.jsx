@@ -33,7 +33,7 @@ const Categories = () => {
         <h1 className="text-2xl font-hero">{category ? pretty(category) : t('categories.title')}</h1>
         <p className="text-sm text-[#6c665b] mt-2">Browse curated stays and experiences in this category.</p>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((r) => (
             <ResortCard key={r.id} resort={r} />
           ))}
