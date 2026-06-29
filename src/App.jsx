@@ -12,6 +12,8 @@ import FAQ from "./pages/FAQ";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Categories from "./pages/Categories";
+import Packages from "./pages/Packages";
+import Journal from "./pages/Journal";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -30,6 +32,8 @@ const App = () => {
           <Route path="faq" element={<FAQ />} />
           <Route path="terms" element={<Terms />} />
           <Route path="privacy" element={<Privacy />} />
+          <Route path="packages" element={<Packages />} />
+          <Route path="journal" element={<Journal />} />
           <Route path="categories">
             <Route path=":category" element={<Categories />} />
             <Route index element={<Categories />} />

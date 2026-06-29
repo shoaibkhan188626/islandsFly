@@ -1,6 +1,7 @@
 export const featuredResorts = [
   {
     id: 1,
+    key: "huvafen",
     name: "Huvafen Fushi",
     location: "North Malé Atoll",
     type: "Luxury Resort",
@@ -11,6 +12,7 @@ export const featuredResorts = [
   },
   {
     id: 2,
+    key: "niyama",
     name: "Niyama Retreat",
     location: "Raa Atoll",
     type: "Oceanfront Resort",
@@ -21,6 +23,7 @@ export const featuredResorts = [
   },
   {
     id: 3,
+    key: "blueforce",
     name: "Maldives Blue Force One",
     location: "South Malé Atoll",
     type: "Liveaboard Safari",

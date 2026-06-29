@@ -9,8 +9,11 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Container from "../common/Container";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="mt-12 bg-[#2f1b12] text-[#d6b895]">
       <Container>
@@ -32,125 +35,164 @@ export default function Footer() {
               <div className="font-hero text-lg text-[#c2996e]">IslandsFly</div>
             </div>
 
-            <p className="mt-6 max-w-sm text-sm text-[#d6b895]">
-              Islandsfly is your trusted partner for discovering the beauty of
-              the Maldives. We offer handpicked accommodations and experiences
-              to make your dream vacation a reality.
+            <p className="mt-6 max-w-sm text-sm text-[#d6b895] leading-relaxed">
+              {t("footer.tagline")}
             </p>
 
             <div className="mt-6 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#52321f] flex items-center justify-center">
+              <a
+                href="https://facebook.com/islandsfly"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-[#52321f] hover:bg-[#c2996e] hover:text-[#2f1b12] transition-colors duration-200 flex items-center justify-center"
+              >
                 <FaFacebookF />
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[#52321f] flex items-center justify-center">
+              </a>
+              <a
+                href="https://www.instagram.com/islands_fly_maldives"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-[#52321f] hover:bg-[#c2996e] hover:text-[#2f1b12] transition-colors duration-200 flex items-center justify-center"
+              >
                 <FaInstagram />
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[#52321f] flex items-center justify-center">
+              </a>
+              <a
+                href="https://www.youtube.com/@islandsfly"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-[#52321f] hover:bg-[#c2996e] hover:text-[#2f1b12] transition-colors duration-200 flex items-center justify-center"
+              >
                 <FaYoutube />
-              </div>
+              </a>
             </div>
           </div>
 
           <div>
-            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4">Explore</h5>
+            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4 uppercase tracking-widest">
+              {t("footer.explore")}
+            </h5>
             <ul className="space-y-3 text-sm text-[#d6b895]">
               <li>
                 <Link to="/" className="hover:underline">
-                  Home
+                  {t("nav.home")}
                 </Link>
               </li>
               <li>
                 <Link to="/properties" className="hover:underline">
-                  Properties
+                  {t("nav.properties")}
                 </Link>
               </li>
               <li>
                 <Link to="/resort" className="hover:underline">
-                  Resort
+                  {t("nav.resort")}
                 </Link>
               </li>
               <li>
                 <Link to="/city-hotels" className="hover:underline">
-                  City Hotels
+                  {t("nav.cityHotels")}
                 </Link>
               </li>
               <li>
                 <Link to="/guesthouse-hotels" className="hover:underline">
-                  Guesthouse/Hotels
+                  {t("nav.guesthouseHotels")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4">Company</h5>
+            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4 uppercase tracking-widest">
+              {t("footer.company")}
+            </h5>
             <ul className="space-y-3 text-sm text-[#d6b895]">
               <li>
                 <Link to="/about" className="hover:underline">
-                  About Us
+                  {t("nav.about")}
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="hover:underline">
-                  Contact
+                  {t("nav.contact")}
                 </Link>
               </li>
               <li>
                 <Link to="/faq" className="hover:underline">
-                  FAQ
+                  {t("nav.faq")}
                 </Link>
               </li>
               <li>
                 <Link to="/terms" className="hover:underline">
-                  Terms
+                  {t("nav.terms")}
                 </Link>
               </li>
               <li>
                 <Link to="/privacy" className="hover:underline">
-                  Privacy
+                  {t("nav.privacy")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4">
-              Get In Touch
+            <h5 className="font-hero text-sm text-[#f3e6d6] mb-4 uppercase tracking-widest">
+              {t("footer.getInTouch")}
             </h5>
 
             <div className="space-y-4 text-sm">
               <div className="flex items-start gap-3">
-                <FaMapMarkerAlt className="mt-1" />
+                <FaMapMarkerAlt className="mt-1 flex-shrink-0" />
                 <div>
-                  <div>H9/15/01</div>
-                  <div>K. Hulhumale' Maldives</div>
-                  <div className="mt-1">Hotline: +960 9933319</div>
+                  <div>{t("footer.address")}</div>
+                  <div className="mt-2 text-xs">
+                    {t("footer.hotline")}:{" "}
+                    <a
+                      href="tel:+9609933319"
+                      className="hover:text-white transition-colors duration-200 font-medium"
+                    >
+                      +960 9933319
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <FaEnvelope />
-                <div>resacoord@islandsfly.com</div>
-              </div>
+              <a
+                href="mailto:resacoord@islandsfly.com"
+                className="flex items-center gap-3 hover:text-white transition-colors duration-200"
+              >
+                <FaEnvelope className="flex-shrink-0" />
+                <span>resacoord@islandsfly.com</span>
+              </a>
 
-              <div className="flex items-center gap-3">
-                <FaPhone />
-                <div>+960 9334441</div>
-              </div>
+              <a
+                href="tel:+9609334441"
+                className="flex items-center gap-3 hover:text-white transition-colors duration-200"
+              >
+                <FaPhone className="flex-shrink-0" />
+                <span>+960 9334441</span>
+              </a>
 
-              <div className="flex items-center gap-3">
-                <FaWhatsapp />
-                <div>+960 9334441</div>
-              </div>
+              <a
+                href="https://wa.me/9609334441"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 hover:text-white transition-colors duration-200"
+              >
+                <FaWhatsapp className="flex-shrink-0" />
+                <span>+960 9334441</span>
+              </a>
             </div>
           </div>
         </div>
 
         <div className="border-t border-[#3f2a20] pt-6 pb-8 text-sm text-[#b08b64] flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>© 2026 Islandsfly. All rights reserved.</div>
+          <div>{t("footer.rights")}</div>
           <div className="flex flex-wrap gap-6">
-            <div>Terms of Service</div>
-            <div>Privacy Policy</div>
+            <Link to="/terms" className="hover:underline">
+              {t("footer.terms")}
+            </Link>
+            <Link to="/privacy" className="hover:underline">
+              {t("footer.privacy")}
+            </Link>
           </div>
         </div>
       </Container>

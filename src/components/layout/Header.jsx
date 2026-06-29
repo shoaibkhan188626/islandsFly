@@ -1,132 +1,239 @@
 import { Link, NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import Button from "../common/Button";
-import LanguageSelector from "../common/LanguageSelector";
 import ThemeToggle from "../common/ThemeToggle";
-import {
-  fetchWeatherData,
-  getWeatherDescription,
-} from "../../services/realtimeApi";
+import LanguageSelector from "../common/LanguageSelector";
 import { useLanguage } from "../../context/LanguageContext";
-import CategoriesDropdown from "../common/CategoriesDropdown";
-
-const navItems = [
-  { key: "properties", to: "/#properties" },
-  { key: "about", to: "/about" },
-];
 
 const Header = () => {
-  const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
-  useEffect(() => {
-    const getWeather = async () => {
-      const data = await fetchWeatherData();
-      setWeather(data);
-      setLoading(false);
-    };
+  // MUST be declared inside the component so that t() evaluates on every language state render
+  const navItems = [
+    { name: t("nav.properties") || "Properties", to: "/properties" },
+    { name: t("categories.title") || "Categories", to: "#", dropdown: true },
+    { name: t("nav.about") || "About", to: "/about" },
+    { name: t("nav.packages") || "Packages", to: "/packages" },
+    { name: t("nav.journal") || "Journal", to: "/journal" },
+    { name: t("nav.contact") || "Contact", to: "/contact" },
+  ];
 
-    getWeather();
-  }, []);
+  const categoryDropdown = [
+    { name: t("nav.resort") || "Resort", to: "/categories/resort" },
+    {
+      name: t("nav.cityHotels") || "City Hotels",
+      to: "/categories/city-hotels",
+    },
+    {
+      name: t("nav.guesthouseHotels") || "Guesthouse",
+      to: "/categories/guesthouse",
+    },
+    { name: "Liveboard Trips", to: "/categories/liveboard-trips" },
+  ];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl shadow-sm transition-colors duration-300">
-      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-[auto_1fr_auto]">
-          {/* Left Section */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-8">
-            {/* Weather */}
-            {!loading && weather && (
-              <motion.div
-                className="hidden sm:flex items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-wider"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <span className="font-semibold text-[var(--text)]">
-                  {t("top.maldives")}: {weather.temperature_2m}°C
-                </span>
-
-                <span className="text-[var(--border)]">|</span>
-
-                <span className="text-[var(--muted)]">
-                  {getWeatherDescription(weather.weather_code)}
-                </span>
-              </motion.div>
-            )}
-
+    <header className="sticky top-0 z-40 py-4 px-4 sm:px-8">
+      <div className="mx-auto max-w-7xl">
+        <nav className="bg-[#52321f]/70 backdrop-blur-md rounded-full px-6 sm:px-8 py-3 sm:py-4 shadow-lg border border-white/10">
+          <div className="flex items-center justify-between gap-4">
             {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Link
-                to="/"
-                className="font-ballet text-4xl text-[var(--accent)] whitespace-nowrap"
-              >
-                Islandsfly
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Center Navigation */}
-          <div className="flex justify-center">
-            <nav className="hidden lg:flex items-center gap-2 rounded-full bg-[var(--surface-muted)] px-4 py-2 ring-1 ring-[var(--border)] shadow-sm backdrop-blur-md">
-              <CategoriesDropdown />
-
-              {navItems.map((item, idx) => (
-                <motion.div
-                  key={item.to}
-                  initial={{ opacity: 0.5, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-[#1a1a1a]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
                 >
-                  <NavLink
-                    to={item.to}
-                    className={({ isActive }) => {
-                      const base =
-                        "rounded-full px-5 py-2 text-xs uppercase tracking-[0.18em] transition whitespace-nowrap";
-
-                      return isActive
-                        ? `${base} bg-[var(--accent)]/20 text-[var(--accent-dark)] font-semibold`
-                        : `${base} text-[var(--muted)] hover:text-[var(--text)]`;
-                    }}
-                  >
-                    {t(`nav.${item.key}`)}
-                  </NavLink>
-                </motion.div>
-              ))}
-            </nav>
-          </div>
-
-          {/* Right Section */}
-          <div className="flex flex-wrap items-center justify-end gap-3 justify-self-end">
-            <ThemeToggle />
-
-            <LanguageSelector />
-
-            <Button as={Link} to="/contact" size="sm" variant="link" className="whitespace-nowrap">
-              Contact
-            </Button>
-
-            <Link to="/book" className="whitespace-nowrap">
-              <Button size="sm">Book</Button>
+                  <path d="M3 12s4-8 9-8 9 8 9 8-4 8-9 8-9-8-9-8z" />
+                </svg>
+              </div>
+              <span className="hidden sm:inline font-semibold text-white text-lg tracking-tight">
+                Islandsfly
+              </span>
             </Link>
-          </div>
-        </div>
 
-        <div className="mt-4 flex flex-wrap justify-center gap-2 lg:hidden">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:bg-[var(--surface)]"
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
+              {navItems.map((item) => {
+                if (item.dropdown) {
+                  return (
+                    <div key={item.name} className="relative group">
+                      <button
+                        onMouseEnter={() => setCategoriesDropdownOpen(true)}
+                        onMouseLeave={() => setCategoriesDropdownOpen(false)}
+                        className="text-sm font-medium text-gray-300 hover:text-white transition cursor-pointer"
+                      >
+                        {item.name}
+                      </button>
+                      {/* Dropdown Menu */}
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={
+                          categoriesDropdownOpen
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: -10, pointerEvents: "none" }
+                        }
+                        transition={{ duration: 0.2 }}
+                        onMouseEnter={() => setCategoriesDropdownOpen(true)}
+                        onMouseLeave={() => setCategoriesDropdownOpen(false)}
+                        className="absolute top-full left-0 mt-2 bg-[#1a1a1a]/95 backdrop-blur-md border border-white/10 rounded-lg shadow-lg overflow-hidden w-48 z-50"
+                      >
+                        {categoryDropdown.map((cat) => (
+                          <NavLink
+                            key={cat.to}
+                            to={cat.to}
+                            className={({ isActive }) =>
+                              `block px-4 py-2.5 text-sm font-medium transition ${
+                                isActive
+                                  ? "bg-white/20 text-white"
+                                  : "text-gray-300 hover:bg-white/10 hover:text-white"
+                              }`
+                            }
+                          >
+                            {cat.name}
+                          </NavLink>
+                        ))}
+                      </motion.div>
+                    </div>
+                  );
+                }
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `text-sm font-medium transition ${
+                        isActive
+                          ? "text-white underline underline-offset-4"
+                          : "text-gray-300 hover:text-white"
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                );
+              })}
+            </div>
+
+            {/* Right Section: Language Selector + Theme Toggle + Email Link */}
+            <div className="hidden sm:flex items-center gap-4">
+              <LanguageSelector />
+              <ThemeToggle />
+              {/* <a
+                href="mailto:resacoord@islandsfly.com"
+                className="text-sm font-medium text-gray-300 hover:text-white transition whitespace-nowrap"
+              >
+                {t("nav.contact") || "Contact"}
+              </a> */}
+            </div>
+
+            {/* Mobile Header Elements */}
+            <div className="md:hidden flex items-center gap-3">
+              <LanguageSelector />
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-white hover:text-gray-300 focus:outline-none"
+              >
+                <i
+                  className={`bi ${mobileMenuOpen ? "bi-x-lg" : "bi-list"} fs-4`}
+                ></i>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu Open Drawer */}
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="md:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-2"
             >
-              {t(`nav.${item.key}`)}
-            </NavLink>
-          ))}
-        </div>
+              {navItems.map((item) => {
+                if (item.dropdown) {
+                  return (
+                    <div key={item.name}>
+                      <button
+                        onClick={() =>
+                          setMobileCategoriesOpen(!mobileCategoriesOpen)
+                        }
+                        className="w-full text-left px-3 py-2 text-sm font-medium text-gray-300 hover:text-white transition flex items-center justify-between"
+                      >
+                        {item.name}
+                        <svg
+                          className={`w-4 h-4 transition ${
+                            mobileCategoriesOpen ? "rotate-180" : ""
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                          />
+                        </svg>
+                      </button>
+                      {mobileCategoriesOpen && (
+                        <div className="pl-4 flex flex-col gap-2 mt-2 border-l border-white/10">
+                          {categoryDropdown.map((cat) => (
+                            <NavLink
+                              key={cat.to}
+                              to={cat.to}
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                setMobileCategoriesOpen(false);
+                              }}
+                              className={({ isActive }) =>
+                                `px-3 py-2 text-sm font-medium rounded-lg transition ${
+                                  isActive
+                                    ? "bg-white/20 text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-white/10"
+                                }`
+                              }
+                            >
+                              {cat.name}
+                            </NavLink>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `px-3 py-2 text-sm font-medium rounded-lg transition ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "text-gray-400 hover:text-white hover:bg-white/10"
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                );
+              })}
+              <a
+                href="mailto:resacoord@islandsfly.com"
+                className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-white transition"
+              >
+                {t("nav.contact") || "Contact"}
+              </a>
+            </motion.div>
+          )}
+        </nav>
       </div>
     </header>
   );

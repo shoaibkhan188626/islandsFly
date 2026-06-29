@@ -40,29 +40,40 @@ const Contact = () => {
               <p className="text-sm text-white/80 mt-2">Reach out to us through any of these channels</p>
 
               <div className="mt-4 space-y-3">
-                <div className="bg-white/10 rounded p-3 flex items-center gap-3">
+                <a 
+                  href="mailto:resacoord@islandsfly.com" 
+                  className="bg-white/10 hover:bg-white/20 transition-all duration-200 rounded p-3 flex items-center gap-3 cursor-pointer"
+                >
                   <FaEnvelope className="w-5 h-5 text-white/90" />
                   <div>
                     <div className="text-xs text-white/80">Email</div>
                     <div className="text-sm">resacoord@islandsfly.com</div>
                   </div>
-                </div>
+                </a>
 
-                <div className="bg-white/10 rounded p-3 flex items-center gap-3">
+                <a 
+                  href="tel:+9609334441" 
+                  className="bg-white/10 hover:bg-white/20 transition-all duration-200 rounded p-3 flex items-center gap-3 cursor-pointer"
+                >
                   <FaPhone className="w-5 h-5 text-white/90" />
                   <div>
                     <div className="text-xs text-white/80">Phone</div>
                     <div className="text-sm">+960 9334441</div>
                   </div>
-                </div>
+                </a>
 
-                <div className="bg-white/10 rounded p-3 flex items-center gap-3">
+                <a 
+                  href="https://wa.me/9609334441" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="bg-white/10 hover:bg-white/20 transition-all duration-200 rounded p-3 flex items-center gap-3 cursor-pointer"
+                >
                   <FaWhatsapp className="w-5 h-5 text-white/90" />
                   <div>
                     <div className="text-xs text-white/80">WhatsApp</div>
                     <div className="text-sm">+960 9334441</div>
                   </div>
-                </div>
+                </a>
 
                 <div className="bg-white/10 rounded p-3 flex items-center gap-3">
                   <FaMapMarkerAlt className="w-5 h-5 text-white/90" />

@@ -14,6 +14,14 @@ const isBetween = (date, start, end) => {
   return normalized > normalizedStart && normalized < normalizedEnd;
 };
 
+// Check if a date lies in the past compared to today
+const isPast = (date) => {
+  if (!date) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return normalizeDate(date).getTime() < today.getTime();
+};
+
 const BookingCalendar = ({ value, onChange }) => {
   const displayMonth = useMemo(() => {
     const source = value?.month || new Date();
@@ -46,7 +54,7 @@ const BookingCalendar = ({ value, onChange }) => {
   }, [displayMonth]);
 
   const handleDateClick = (date) => {
-    if (!date) return;
+    if (!date || isPast(date)) return;
     const { start, end } = value;
 
     if (!start || (start && end)) {
@@ -130,6 +138,8 @@ const BookingCalendar = ({ value, onChange }) => {
                 className="h-9 rounded bg-[var(--bg)]"
               />
             );
+
+          const isPastDate = isPast(date);
           const isSelected =
             sameDay(date, value.start) || sameDay(date, value.end);
           const isRange =
@@ -139,8 +149,17 @@ const BookingCalendar = ({ value, onChange }) => {
             <button
               key={date.toISOString()}
               type="button"
+              disabled={isPastDate}
               onClick={() => handleDateClick(date)}
-              className={`flex h-9 items-center justify-center rounded text-sm font-medium transition cursor-pointer ${isSelected ? "bg-[var(--text)] text-[var(--bg)]" : isRange ? "bg-[var(--bg)] text-[var(--text)]" : "bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--bg)]"}`}
+              className={`flex h-9 items-center justify-center rounded text-sm font-medium transition ${
+                isPastDate
+                  ? "opacity-30 cursor-not-allowed text-[var(--muted)]"
+                  : isSelected
+                    ? "bg-[var(--text)] text-[var(--bg)] cursor-pointer"
+                    : isRange
+                      ? "bg-[var(--bg)] text-[var(--text)] cursor-pointer"
+                      : "bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--bg)] cursor-pointer"
+              }`}
             >
               {date.getDate()}
             </button>

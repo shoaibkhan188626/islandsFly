@@ -12,6 +12,8 @@ const TRANSLATIONS = {
       cityHotels: "City Hotels",
       guesthouseHotels: "Guesthouse/Hotels",
       about: "About Us",
+      packages: "Packages",
+      journal: "Journal",
       contact: "Contact",
       faq: "FAQ",
       terms: "Terms",
@@ -31,14 +33,44 @@ const TRANSLATIONS = {
         explore: "Explore services",
       },
       offer: {
+        tag: "What we offer",
         title: "A travel experience shaped around you.",
+        subtitle: "Every booking includes transfer coordination, resort recommendations, and round-the-clock concierge support.",
+        highlights: [
+          {
+            title: "Curated Journeys",
+            description: "Every package is designed for seamless transfer, local culture, and high-touch service.",
+          },
+          {
+            title: "Flexible Booking",
+            description: "Zero-hassle date changes and expert advice for visa, wellness, and excursions.",
+          },
+          {
+            title: "Trusted Local Partner",
+            description: "A registered Maldives travel agency with 24/7 concierge support from arrival to departure.",
+          },
+        ]
       },
       featured: {
+        tag: "Featured stays",
         title: "Handpicked escapes",
         cta: "Start booking →",
       },
       traveler: {
+        tag: "Traveler stories",
         title: "Trusted service, memorable journeys.",
+        reviews: [
+          {
+            id: 1,
+            author: "Sofia R.",
+            quote: "The booking experience was polished and fast. Our private villa exceeded every expectation.",
+          },
+          {
+            id: 2,
+            author: "Mikael T.",
+            quote: "They handled transfers, in-resort requests, and excursions without any friction.",
+          },
+        ]
       },
     },
     booking: {
@@ -89,6 +121,33 @@ const TRANSLATIONS = {
         "The page you are looking for doesn’t exist. Return to the homepage and continue planning your Maldives escape.",
       button: "Return home",
     },
+    footer: {
+      tagline: "Islandsfly is your trusted partner for discovering the beauty of the Maldives. We offer handpicked accommodations and experiences to make your dream vacation a reality.",
+      explore: "Explore",
+      company: "Company",
+      getInTouch: "Get In Touch",
+      address: "H9/15/01, K. Hulhumale' Maldives",
+      hotline: "Hotline",
+      rights: "© 2026 Islandsfly. All rights reserved.",
+      terms: "Terms of Service",
+      privacy: "Privacy Policy",
+    },
+    resorts: {
+      from: "From",
+      book: "Book",
+      huvafen: {
+        type: "Luxury Resort",
+        location: "North Malé Atoll"
+      },
+      niyama: {
+        type: "Oceanfront Resort",
+        location: "Raa Atoll"
+      },
+      blueforce: {
+        type: "Liveaboard Safari",
+        location: "South Malé Atoll"
+      }
+    }
   },
   de: {
     nav: {
@@ -98,6 +157,8 @@ const TRANSLATIONS = {
       cityHotels: "Stadthotels",
       guesthouseHotels: "Gasthäuser/Hotels",
       about: "Über uns",
+      packages: "Pakete",
+      journal: "Journal",
       contact: "Kontakt",
       faq: "FAQ",
       terms: "Bedingungen",
@@ -116,9 +177,46 @@ const TRANSLATIONS = {
         plan: "Reise planen",
         explore: "Services erkunden",
       },
-      offer: { title: "Ein Reiseerlebnis, das auf Sie zugeschnitten ist." },
-      featured: { title: "Handverlesene Orte", cta: "Buchung starten →" },
-      traveler: { title: "Vertrauenswürdiger Service, unvergessliche Reisen." },
+      offer: {
+        tag: "Was wir bieten",
+        title: "Ein Reiseerlebnis, das auf Sie zugeschnitten ist.",
+        subtitle: "Jede Buchung beinhaltet die Transferkoordination, Resort-Empfehlungen und rund um die Uhr Concierge-Unterstützung.",
+        highlights: [
+          {
+            title: "Kuratierte Reisen",
+            description: "Jedes Paket ist für nahtlose Transfers, lokale Kultur und erstklassigen Service konzipiert.",
+          },
+          {
+            title: "Flexible Buchung",
+            description: "Problemlose Terminänderungen und kompetente Beratung für Visa, Wellness und Ausflüge.",
+          },
+          {
+            title: "Zuverlässiger lokaler Partner",
+            description: "Ein registriertes Reisebüro auf den Malediven mit 24/7 Concierge-Support von der Ankunft bis zur Abreise.",
+          },
+        ]
+      },
+      featured: {
+        tag: "Empfohlene Aufenthalte",
+        title: "Handverlesene Orte",
+        cta: "Buchung starten →",
+      },
+      traveler: {
+        tag: "Reiseberichte",
+        title: "Vertrauenswürdiger Service, unvergessliche Reisen.",
+        reviews: [
+          {
+            id: 1,
+            author: "Sofia R.",
+            quote: "Das Buchungserlebnis war reibungslos und schnell. Unsere private Villa hat alle Erwartungen übertroffen.",
+          },
+          {
+            id: 2,
+            author: "Mikael T.",
+            quote: "Transfers, Wünsche im Resort und Ausflüge wurden ohne jegliche Reibung abgewickelt.",
+          },
+        ]
+      },
     },
     booking: {
       details: {
@@ -166,6 +264,33 @@ const TRANSLATIONS = {
         "Die gesuchte Seite existiert nicht. Kehren Sie zur Startseite zurück und planen Sie weiter Ihre Maledivenreise.",
       button: "Zurück zur Startseite",
     },
+    footer: {
+      tagline: "Islandsfly ist Ihr vertrauenswürdiger Partner zur Entdeckung der Schönheit der Malediven. Wir bieten handverlesene Unterkünfte und Erlebnisse, um Ihren Traumurlaub wahr werden zu lassen.",
+      explore: "Erkunden",
+      company: "Unternehmen",
+      getInTouch: "Kontakt",
+      address: "H9/15/01, K. Hulhumale' Malediven",
+      hotline: "Hotline",
+      rights: "© 2026 Islandsfly. Alle Rechte vorbehalten.",
+      terms: "Nutzungsbedingungen",
+      privacy: "Datenschutzrichtlinie",
+    },
+    resorts: {
+      from: "Ab",
+      book: "Buchen",
+      huvafen: {
+        type: "Luxus-Resort",
+        location: "Nord-Malé-Atoll"
+      },
+      niyama: {
+        type: "Resort am Meer",
+        location: "Raa-Atoll"
+      },
+      blueforce: {
+        type: "Tauch-Liveaboard",
+        location: "Süd-Malé-Atoll"
+      }
+    }
   },
   ru: {
     nav: {
@@ -175,6 +300,8 @@ const TRANSLATIONS = {
       cityHotels: "Городские отели",
       guesthouseHotels: "Гестхаусы/Отели",
       about: "О нас",
+      packages: "Пакеты",
+      journal: "Журнал",
       contact: "Контакт",
       faq: "FAQ",
       terms: "Условия",
@@ -190,9 +317,46 @@ const TRANSLATIONS = {
           "Отобранные варианты размещения на Мальдивах: частные острова, гостевые дома и специальные лайвоборды — с локальной экспертизой и внимательным сервисом.",
       },
       buttons: { plan: "Планировать поездку", explore: "Изучить услуги" },
-      offer: { title: "Путешествие, созданное вокруг вас." },
-      featured: { title: "Подобранные места", cta: "Начать бронирование →" },
-      traveler: { title: "Доверенный сервис, незабываемые путешествия." },
+      offer: {
+        tag: "Что мы предлагаем",
+        title: "Путешествие, созданное вокруг вас.",
+        subtitle: "Каждое бронирование включает в себя координацию трансфера, рекомендации по курортам и круглосуточную поддержку консьержа.",
+        highlights: [
+          {
+            title: "Организованные поездки",
+            description: "Каждый пакет разработан для беспрепятственного трансфера, знакомства с местной культурой и высокого уровня обслуживания.",
+          },
+          {
+            title: "Гибкое бронирование",
+            description: "Никаких проблем с изменением дат и профессиональные консультации по визам, оздоровлению и экскурсиям.",
+          },
+          {
+            title: "Надежный местный партнер",
+            description: "Зарегистрированное туристическое агентство Мальдивских островов с круглосуточной поддержкой консьержа от прибытия до отъезда.",
+          },
+        ]
+      },
+      featured: {
+        tag: "Рекомендуемые варианты",
+        title: "Подобранные места",
+        cta: "Начать бронирование →",
+      },
+      traveler: {
+        tag: "Отзывы путешественников",
+        title: "Доверенный сервис, незабываемые путешествия.",
+        reviews: [
+          {
+            id: 1,
+            author: "София Р.",
+            quote: "Процесс бронирования был быстрым и понятным. Наша частная вилла превзошла все ожидания.",
+          },
+          {
+            id: 2,
+            author: "Микаэль Т.",
+            quote: "Они без проблем организовали трансферы, запросы на курорте и экскурсии.",
+          },
+        ]
+      },
     },
     booking: {
       details: {
@@ -264,9 +428,46 @@ const TRANSLATIONS = {
           "精选马尔代夫住宿：私人岛屿、精选民宿和专属游船——由本地专家安排，提供周到服务。",
       },
       buttons: { plan: "计划行程", explore: "探索服务" },
-      offer: { title: "围绕您打造的旅行体验。" },
-      featured: { title: "精选目的地", cta: "开始预订 →" },
-      traveler: { title: "值得信赖的服务，难忘的旅程。" },
+      offer: {
+        tag: "我们提供什么",
+        title: "围绕您打造的旅行体验。",
+        subtitle: "每次预订均包含接送协调、度假村推荐和全天候礼宾支持。",
+        highlights: [
+          {
+            title: "精心定制的旅程",
+            description: "每个套餐都旨在实现无缝接送、融入当地文化和享受高品质服务。",
+          },
+          {
+            title: "灵活便捷的预订",
+            description: "无忧日期更改以及有关签证、康养和远足的专家建议。",
+          },
+          {
+            title: "信誉良好的当地伙伴",
+            description: "注册 of 马尔代夫旅行社，从您抵达至离开提供 24/7 礼宾服务支持。",
+          },
+        ]
+      },
+      featured: {
+        tag: "精选住宿",
+        title: "精选目的地",
+        cta: "开始预订 →",
+      },
+      traveler: {
+        tag: "旅客故事",
+        title: "值得信赖的服务，难忘的旅程。",
+        reviews: [
+          {
+            id: 1,
+            author: "索菲亚 R.",
+            quote: "预订体验流畅快捷。我们的私人别墅超出了所有的预期。",
+          },
+          {
+            id: 2,
+            author: "米卡尔 T.",
+            quote: "他们毫无摩擦地处理了接送、度假村内的要求以及出海游玩项目。",
+          },
+        ]
+      },
     },
     booking: {
       details: {
@@ -312,6 +513,33 @@ const TRANSLATIONS = {
       message: "您要查找的页面不存在。返回主页并继续规划您的马尔代夫之旅。",
       button: "返回首页",
     },
+    footer: {
+      tagline: "Islandsfly 是您探索马尔代夫之美的忠实伙伴。我们提供精心挑选的住宿和体验，助您实现梦想中的度假体验。",
+      explore: "探索",
+      company: "公司",
+      getInTouch: "保持联系",
+      address: "马尔代夫 胡鲁马累 H9/15/01",
+      hotline: "热线电话",
+      rights: "© 2026 Islandsfly. 保留所有权利。",
+      terms: "服务条款",
+      privacy: "隐私政策",
+    },
+    resorts: {
+      from: "起价",
+      book: "预订",
+      huvafen: {
+        type: "奢华度假村",
+        location: "北马累环礁"
+      },
+      niyama: {
+        type: "海滨度假村",
+        location: "拉环礁"
+      },
+      blueforce: {
+        type: "船宿潜水游",
+        location: "南马累环礁"
+      }
+    }
   },
   ja: {
     nav: {
@@ -321,6 +549,8 @@ const TRANSLATIONS = {
       cityHotels: "シティホテル",
       guesthouseHotels: "ゲストハウス/ホテル",
       about: "私たちについて",
+      packages: "パッケージ",
+      journal: "ジャーナル",
       contact: "連絡先",
       faq: "FAQ",
       terms: "利用規約",
@@ -333,12 +563,49 @@ const TRANSLATIONS = {
       hero: {
         title: "群島を発見する洗練された方法。",
         subtitle:
-          "マルディブの厳選宿泊：プライベートアイランド、厳選ゲストハウス、特別なライブアボード — 地元の専門知識と丁寧なサービスで手配します。",
+          "マルディブの厳選宿泊：プライベートアイランド、厳選ゲストハウス、特別なライブアボード — 地元の専門知識 e と丁寧なサービスで手配します。",
       },
       buttons: { plan: "旅行を計画", explore: "サービスを探索" },
-      offer: { title: "あなたに合わせた旅行体験。" },
-      featured: { title: "厳選の旅先", cta: "予約を始める →" },
-      traveler: { title: "信頼されるサービス、忘れられない旅。" },
+      offer: {
+        tag: "私たちのサービス",
+        title: "あなたに合わせた旅行体験。",
+        subtitle: "すべての予約には、送迎手配、リゾートの推薦、24時間のコンシェルジュサポートが含まれています。",
+        highlights: [
+          {
+            title: "厳選された旅程",
+            description: "すべてのパッケージはスムーズな送迎、現地の文化、行き届いたサービスを考慮して設計されています。",
+          },
+          {
+            title: "柔軟な予約変更",
+            description: "トラブルフリーな日程変更や、ビザ、ウェルネス、エクスカーションに関する専門的なアドバイス。",
+          },
+          {
+            title: "信頼できる現地パートナー",
+            description: "到着から出発まで24時間体制でサポートする、モルディブ政府公認の旅行代理店です。",
+          },
+        ]
+      },
+      featured: {
+        tag: "おすすめの滞在先",
+        title: "厳選の旅先",
+        cta: "予約を始める →",
+      },
+      traveler: {
+        tag: "旅行者の体験談",
+        title: "信頼されるサービス、忘れられない旅。",
+        reviews: [
+          {
+            id: 1,
+            author: "ソフィア R.",
+            quote: "予約プロセスはとてもスマートで迅速でした。プライベートヴィラは期待以上のものでした。",
+          },
+          {
+            id: 2,
+            author: "ミカエル T.",
+            quote: "送迎、リゾートでのリクエスト、エクスカーションをすべて完璧に手配してくれました。",
+          },
+        ]
+      },
     },
     booking: {
       details: {
@@ -386,6 +653,33 @@ const TRANSLATIONS = {
         "お探しのページは存在しません。ホームページに戻り、モルディブの旅を計画してください。",
       button: "ホームに戻る",
     },
+    footer: {
+      tagline: "Islandsflyは、モルディブの美しさを発見するための信頼できるパートナーです。夢のバケーションを実現するため、厳選された宿泊施設と体験を提供します。",
+      explore: "探索する",
+      company: "会社情報",
+      getInTouch: "お問い合わせ",
+      address: "H9/15/01, フルマーレ, モルディブ",
+      hotline: "ホットライン",
+      rights: "© 2026 Islandsfly. All rights reserved.",
+      terms: "利用規約",
+      privacy: "プライバシーポリシー",
+    },
+    resorts: {
+      from: "料金",
+      book: "予約する",
+      huvafen: {
+        type: "高級リゾート",
+        location: "北マーレ環礁"
+      },
+      niyama: {
+        type: "ビーチフロントリゾート",
+        location: "ラー環礁"
+      },
+      blueforce: {
+        type: "ダイビングクルーズ",
+        location: "南マーレ環礁"
+      }
+    }
   },
 };
 
