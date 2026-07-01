@@ -1,0 +1,12 @@
+Get-ChildItem -Recurse -File | Where-Object { 
+    $_.FullName -notmatch '\\(node_modules|\.git|dist|build|\.next|out|coverage|_files)\\' -and 
+    $_.Extension -match '\.(js|jsx|css|json|html|config)$' -and
+    $_.Name -ne 'codebase_dump.txt'
+} | ForEach-Object {
+    $relativePath = Resolve-Path $_.FullName -Relative
+    Add-Content -Path .\codebase_dump.txt -Value "========================================"
+    Add-Content -Path .\codebase_dump.txt -Value "FILE: $relativePath"
+    Add-Content -Path .\codebase_dump.txt -Value "========================================"
+    Get-Content $_.FullName | Add-Content -Path .\codebase_dump.txt
+    Add-Content -Path .\codebase_dump.txt -Value "`n`n"
+}
